@@ -111,7 +111,7 @@ footer{color:var(--muted);font-size:.8rem;margin-top:28px}
           <div class="row2">
             <label class="f">Mês de referência
               <select id="mes"></select></label>
-            <label class="f">Data do Termo
+            <label class="f">Data do Termo (vai no texto)
               <input id="data" type="date"></label>
           </div>
           <label class="f">Nº da(s) nota(s) fiscal(is) <span style="font-weight:400">(opcional)</span>
@@ -348,7 +348,7 @@ function build(){
   out.appendChild(group('Motivos de encaminhamento', n, ...mot));
 }
 
-['forn','obj','nfs','abre','data','mes'].forEach(k => $(k).addEventListener('input', build));
+['forn','obj','nfs','abre','data','mes'].forEach(k => { $(k).addEventListener('input', build); $(k).addEventListener('change', build); });
 $('secao').addEventListener('input', () => { renderSigners(); build(); });
 /* objeto lembrado por empresa: ao trocar a empresa, o objeto acompanha */
 const objPorEmpresa = store.get('objetos', {'Energisa':'dos serviços de energia'});
@@ -456,8 +456,8 @@ function baseName(){ const f = ($('forn').value.trim() || 'pagamento').replace(/
 async function save(filename, data){
   const blob = data instanceof Blob ? data : new Blob([data]);
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); a.remove();
+  const el = document.createElement('a'); el.href = url; el.download = filename;
+  document.body.appendChild(el); el.click(); el.remove();
   setTimeout(() => URL.revokeObjectURL(url), 4000);
   $('dlMsg').textContent = 'Arquivo baixado: ' + filename;
 }
